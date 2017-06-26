@@ -44,7 +44,7 @@ again.
 
 Is necessary yet, configure your PHP file on external
 server. This plugin, encrypt your password with the hash
-SHA-512, so your PHP file need to be the same password
+SHA-512, so your PHP file need to have the same password
 configured as a variable and, in a second moment, must
 be encrypted and compared with the hash from Minecraft
 server side, to guarantee your exclusive access when
