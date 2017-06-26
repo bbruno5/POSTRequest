@@ -28,8 +28,7 @@ equivalent to variables sent to external server.
 
 	INSTALL
 
-Download and put the file POSTRequest.jar into your plu-
-gins folder and then, restart your server.
+Download and put the file POSTRequest.jar into your plugins folder and then, restart your server.
 
 
 
@@ -57,8 +56,7 @@ A sample PHP file can be found with this plugin.
 
 	COMMAND
 
-The syntax to use the plugin is very simple. To use vari-
-ables, you can call this plugin from another, or just use
+The syntax to use the plugin is very simple. To use variables, you can call this plugin from another, or just use
 global variables, like @p, @a, etc. With plugins like
 Skript, there are innumerable possibilities.
 
@@ -80,15 +78,13 @@ following permission configured on your permission system:
 
   postrequest.pr.send (default op)
 
-Be very careful when setting this permission, if your in-
-tents are for send important data values.
+Be very careful when setting this permission, if your intents are for send important data values.
 
 
 
 	DONATE
 
-I don't made this plugin for gain anything, except facili-
-ties on my server, but if you donate me any quantity, I will
+I don't made this plugin for gain anything, except facilities on my server, but if you donate me any quantity, I will
 can buy (someday) a new computer. The mine is dying :s But
 feel free to use without donating ^_^
 
