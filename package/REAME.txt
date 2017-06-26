@@ -1,0 +1,1 @@
+Follow the sample example.php to create a php file on your PHP server, or just put the file on it.
