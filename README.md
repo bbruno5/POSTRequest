@@ -1,16 +1,22 @@
 ###############################################################
+
 Name: POSTRequest Plugin for Spigot 1.9/1.10/1.11/1.12
+
 Version: 1.0
+
 Author: bbruno5
+
 E-mail: <bbruno5.ever@gmail.com>
+
 Author Site:<https://bbruno5.us.to>
+
 Company: B5 Team
+
 Company Site: <https://b5team.com>
+
 ###############################################################
 
-                     README
-
-ABOUT
+	ABOUT
 
 This plugin was made to send POST requests for a
 external PHP server, sending data from Minecraft Servers
@@ -20,14 +26,14 @@ equivalent to variables sent to external server.
 
 
 
-INSTALL
+	INSTALL
 
 Download and put the file POSTRequest.jar into your plu-
 gins folder and then, restart your server.
 
 
 
-CONFIGURE
+	CONFIGURE
 
 Open plugins/POSTRequest/config.txt and edit it putting
 your URL and your password in the correct fields. Make
@@ -49,7 +55,7 @@ A sample PHP file can be found with this plugin.
 
 
 
-COMMAND
+	COMMAND
 
 The syntax to use the plugin is very simple. To use vari-
 ables, you can call this plugin from another, or just use
@@ -67,19 +73,19 @@ name of player, the string 'buy' and the string 'Vip'.
 
 
 
-PERMISSION
+	PERMISSION
 
 To use this plugin and send commands, you need to have the
 following permission configured on your permission system:
 
-	postrequest.pr.send (default op)
+  postrequest.pr.send (default op)
 
 Be very careful when setting this permission, if your in-
 tents are for send important data values.
 
 
 
-DONATE
+	DONATE
 
 I don't made this plugin for gain anything, except facili-
 ties on my server, but if you donate me any quantity, I will
