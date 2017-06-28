@@ -13,7 +13,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -47,11 +46,9 @@ public class HttpsPOSTRequest {
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			
-			ArrayList<String> params = new ArrayList<String>(args.length + 1);
-			
 			DataOutputStream output = new DataOutputStream(con.getOutputStream());
 			output.writeBytes("hash=" + hash);
-			for(int i = 0; i < params.size(); i++) {
+			for(int i = 0; i < args.length; i++) {
 				output.writeBytes("&");
 				output.writeBytes("arg" + i + "=" + args[i]);
 				output.flush();
