@@ -10,7 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class HttpPOSTRequest {
 	
@@ -26,11 +25,9 @@ public class HttpPOSTRequest {
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			
-			ArrayList<String> params = new ArrayList<String>(args.length + 1);
-			
 			DataOutputStream output = new DataOutputStream(con.getOutputStream());
 			output.writeBytes("hash=" + hash);
-			for(int i = 0; i < params.size(); i++) {
+			for(int i = 0; i < args.length; i++) {
 				output.writeBytes("&");
 				output.writeBytes("arg" + i + "=" + args[i]);
 				output.flush();
