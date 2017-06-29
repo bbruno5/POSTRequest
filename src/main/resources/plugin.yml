@@ -1,13 +1,14 @@
 main: com.b5team.postrequest.Main
 name: POSTRequest
-version: 1.0
+version: 1.0.2-SNAPSHOT
 author: bbruno5
 description: HTTP/HTTPS POST Request for send data to external PHP server
 commands:
   pr:
-    description: Calls plgin to send data request
+    description: Calls plugin to send data request
     usage: |
             /<command> <arguments>
-    permission: postrequest.pr.send
-    permission-message: You don't have permission to do this.
-    defalt: op
+permissions:
+    postrequest.pr.send:
+        description: Allows you to use postrequest
+        default: op
