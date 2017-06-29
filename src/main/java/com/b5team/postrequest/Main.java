@@ -55,6 +55,7 @@ public class Main extends JavaPlugin {
 		if(!this.isEnabled()){
             logger.log(Level.SEVERE, "POSTRequest is disabled. Restart the server to run commands.");
         } else if(cmd.getName().equalsIgnoreCase("pr")) {
+        	String[] arg = args;
         	String url = Main.getSettings().getUrl();
         	String protocol = Main.getSettings().getProtocol();
         	String pwd = Main.getSettings().getPwd();
@@ -68,11 +69,11 @@ public class Main extends JavaPlugin {
 					if (protocol == "https") {
 	        			
 						System.out.println("[POSTRequest] Making HTTPS POST request...");
-	        			HttpsPOSTRequest.sendRequest(url, hash, args);
+	        			HttpsPOSTRequest.sendRequest(url, hash, arg);
 	        		} else if (protocol == "http") {
 	        			
 	        			System.out.println("[POSTRequest] Making HTTP POST request...");
-	        			HttpPOSTRequest.sendRequest(url, hash, args);
+	        			HttpPOSTRequest.sendRequest(url, hash, arg);
 	        		}
 					
 	        	} else if (sender instanceof Player) {
@@ -82,11 +83,11 @@ public class Main extends JavaPlugin {
 	        			
 	        			if (protocol == "https") {
 		        			System.out.println("[POSTRequest] Making HTTPS POST request...");
-		        			HttpsPOSTRequest.sendRequest(url, hash, args);
+		        			HttpsPOSTRequest.sendRequest(url, hash, arg);
 		        		} else if (protocol == "http") {
 		        			
 		        			System.out.println("[POSTRequest] Making HTTP POST request...");
-		        			HttpPOSTRequest.sendRequest(url, hash, args);
+		        			HttpPOSTRequest.sendRequest(url, hash, arg);
 		        		}
 	        			
 	        		} else {
