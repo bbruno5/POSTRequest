@@ -1,18 +1,11 @@
 # POSTRequest Plugin for Spigot 1.8/1.9/1.10/1.11/1.12
 
-Version: 1.0.2-SNAPSHOT
-
-Author: bbruno5
-
-E-mail: bbruno5.ever@gmail.com
-
-Author Site:https://bbruno5.us.to
-
-Company: B5 Team
-
-Company Site: https://b5team.com
-
-###############################################################
+    Version: 1.0.2-SNAPSHOT
+    Author: bbruno5
+    E-mail: bbruno5.ever@gmail.com
+    Author Site:https://bbruno5.us.to
+    Company: B5 Team
+    Company Site: https://b5team.com
 
 ABOUT
 This plugin was made to send POST requests for a external PHP server, sending data from Minecraft Servers as you want. Works with HTTP and HTTPS protocols, accepting as many arguments as you want per command, equivalent to variables sent to external server.
