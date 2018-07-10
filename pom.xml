@@ -2,9 +2,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.b5team.postrequest</groupId>
 	<artifactId>POSTRequest</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.4</version>
 	<name>POSTRequest</name>
-  
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -14,6 +14,15 @@
 	        <id>spigot-repo</id>
 	        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 	    </repository>
+		    <repository>
+	        <id>repo-id</id>
+	        <name>repo-name</name>
+	        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	    </repository>
+	    <repository>
+			<id>bstats-repo</id>
+			<url>http://repo.bstats.org/content/repositories/releases/</url>
+		</repository>
 	</repositories>
 	
 	<dependencies>
@@ -26,7 +35,17 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.8-R0.1-SNAPSHOT</version>
+			<version>1.12.2-R0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.apache.httpcomponents</groupId>
+    		<artifactId>httpclient</artifactId>
+    		<version>4.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>1.2</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -42,17 +61,48 @@
 						</goals>
 						<configuration>
 							<minimizeJar>true</minimizeJar>
+							 <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+							 <shadeSourcesContent>true</shadeSourcesContent>
 							<artifactSet>
 								<excludes>
 									<exclude>org.bukkit:bukkit</exclude>
 								</excludes>
+								<includes>
+									<include>org.apache.httpcomponents:httpasyncclient</include>
+	                            	<include>org.apache.httpcomponents:httpcore</include>
+	                            	<include>org.apache.httpcomponents:httpcore-nio</include>
+	                            	<include>org.apache.httpcomponents:httpclient</include>
+	                            	<include>commons-codec:commons-codec</include>
+                                    <include>commons-logging:commons-logging</include>
+                                    <include>org.bstats:*</include>
+                            	</includes>
 							</artifactSet>
+							<relocations>
+								<relocation>
+					            	<pattern>org.bstats</pattern>
+					            	<shadedPattern>com.b5team.postrequest</shadedPattern>
+					        	</relocation>
+		                        <relocation>
+		                            <pattern>org.apache.http</pattern>
+		                            <shadedPattern>com.theladders.apache.http</shadedPattern>
+		                        </relocation>
+		                    </relocations>
 							<filters>
 								<filter>
+									<artifact>*:*</artifact>
 									<artifact>commons-logging:commons-logging</artifact>
-									<includes>
-										<include>org/apache/commons/logging/**</include>
-									</includes>
+		                            <includes>
+		                                <include>org/apache/commons/logging/**</include>
+		                            </includes>
+									<excludes>
+		                                <exclude>META-INF/license/**</exclude>
+		                                <exclude>META-INF/*</exclude>
+		                                <exclude>META-INF/maven/**</exclude>
+		                                <exclude>LICENSE</exclude>
+		                                <exclude>NOTICE</exclude>
+		                                <exclude>/*.txt</exclude>
+		                                <exclude>build.properties</exclude>
+									</excludes>
 								</filter>
 							</filters>
 						</configuration>
