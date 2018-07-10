@@ -3,11 +3,11 @@ package com.b5team.postrequest;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,6 +40,13 @@ public class Main extends JavaPlugin {
             this.getPluginLoader().disablePlugin(this);
             return;
 		}
+		
+		Metrics metrics = new Metrics(this);
+		
+		if (metrics.getPluginData() != null) {
+			
+			logger.info("Metrics enabled!");
+		}
 	}
 	
 	@Override
@@ -54,7 +61,7 @@ public class Main extends JavaPlugin {
 			String[] args) {
 		if(!this.isEnabled()){
             logger.log(Level.SEVERE, "POSTRequest is disabled. Restart the server to run commands.");
-        } else if(cmd.getName().equalsIgnoreCase("pr")) {
+        } else if (cmd.getName().equalsIgnoreCase("pr")) {
         	String[] arg = args;
         	String url = Main.getSettings().getUrl();
         	String protocol = Main.getSettings().getProtocol();
@@ -68,11 +75,11 @@ public class Main extends JavaPlugin {
 	        		
 					if (protocol == "https") {
 	        			
-						System.out.println("[POSTRequest] Making HTTPS POST request...");
+						logger.info("Making HTTPS POST request...");
 	        			HttpsPOSTRequest.sendRequest(url, hash, arg);
 	        		} else if (protocol == "http") {
 	        			
-	        			System.out.println("[POSTRequest] Making HTTP POST request...");
+	        			logger.info("Making HTTP POST request...");
 	        			HttpPOSTRequest.sendRequest(url, hash, arg);
 	        		}
 					
@@ -82,11 +89,11 @@ public class Main extends JavaPlugin {
 	        		if (plsender.hasPermission("postrequest.pr.send")) {
 	        			
 	        			if (protocol == "https") {
-		        			System.out.println("[POSTRequest] Making HTTPS POST request...");
+		        			logger.info("Making HTTPS POST request...");
 		        			HttpsPOSTRequest.sendRequest(url, hash, arg);
 		        		} else if (protocol == "http") {
 		        			
-		        			System.out.println("[POSTRequest] Making HTTP POST request...");
+		        			logger.info("Making HTTP POST request...");
 		        			HttpPOSTRequest.sendRequest(url, hash, arg);
 		        		}
 	        			
@@ -96,25 +103,22 @@ public class Main extends JavaPlugin {
 	        	}
 				
 			} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-				logger.log(Level.SEVERE, "[POSTRequest] Non-unicode caracteres found on your password. Change it and reload the server.");
-				e.printStackTrace();
-			} catch (KeyManagementException e) {
-				System.out.println("[POSTRequest] Error on KeyManagement while initiating context.");
+				logger.log(Level.SEVERE, "Non-unicode caracteres found on your password. Change it and reload the server.");
 				e.printStackTrace();
 			}
         }
 		return false;
 	}
 	
-	public static Main getInstance() {
+	protected static Main getInstance() {
 		return plugin;
 	}
 	
-	public static Logger getMainLogger() {
+	protected static Logger getMainLogger() {
 		return logger;
 	}
 	
-	public static Settings getSettings() {
+	protected static Settings getSettings() {
 		return settings;
 	}
 }
