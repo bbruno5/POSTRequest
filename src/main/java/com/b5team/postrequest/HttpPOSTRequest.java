@@ -10,58 +10,69 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.logging.Level;
 
-public class HttpPOSTRequest {
+import org.bukkit.scheduler.BukkitRunnable;
+
+class HttpPOSTRequest {
 	
-	public static void sendRequest(String myurl, String hash, String args[]) {
+	static void sendRequest(String myurl, String hash, String args[]) {
 		
-		try {
-			URL url = new URL(myurl);
+		BukkitRunnable r = new BukkitRunnable() {
 			
-			HttpURLConnection con = (HttpURLConnection)url.openConnection();
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
-			con.setDoOutput(true);
-			con.setDoInput(true);
-			
-			DataOutputStream output = new DataOutputStream(con.getOutputStream());
-			output.writeBytes("hash=" + hash);
-			for(int i = 0; i < args.length; i++) {
-				output.writeBytes("&");
-				output.writeBytes("arg" + i + "=" + args[i]);
-				output.flush();
+			@Override
+			public void run() {
+				
+				try {
+					URL url = new URL(myurl);
+					
+					HttpURLConnection con = (HttpURLConnection)url.openConnection();
+					con.setRequestMethod("POST");
+					con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+					con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
+					con.setDoOutput(true);
+					con.setDoInput(true);
+					
+					DataOutputStream output = new DataOutputStream(con.getOutputStream());
+					output.writeBytes("hash=" + hash);
+					for(int i = 0; i < args.length; i++) {
+						output.writeBytes("&");
+						output.writeBytes("arg" + i + "=" + args[i]);
+						output.flush();
+					}
+					
+					output.flush();
+					output.close();
+					
+					DataInputStream input = new DataInputStream(con.getInputStream());
+					BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+					String line;
+					
+					Main.getMainLogger().info("Data sent successfully!");
+					Main.getMainLogger().info("Resp Code:"+con.getResponseCode());
+					System.out.println("Resp Message:"+con.getResponseMessage());
+					
+					while ((line = reader.readLine()) != null) {
+						Main.getMainLogger().info("Report: "+line);
+					}
+					
+					input.close();
+					
+				} catch (UnsupportedEncodingException e) {
+					
+					Main.getMainLogger().log(Level.SEVERE, "Encoding error. Maybe string have invalid caracters.", e);
+				} catch (MalformedURLException e) {
+					
+					Main.getMainLogger().log(Level.SEVERE, "Invalid URL. Verify your URL and try again.", e);
+				} catch (ProtocolException e) {
+					
+					Main.getMainLogger().log(Level.SEVERE, "Error on HttpPOST request.", e);
+				} catch (IOException e) {
+					
+					Main.getMainLogger().log(Level.SEVERE, "Error on HTTP connection.", e);
+				}
 			}
-			
-			output.flush();
-			output.close();
-			
-			DataInputStream input = new DataInputStream(con.getInputStream());
-			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-			String line;
-			
-			System.out.println("[POSTRequest] Data sent successfully!");
-			System.out.println("[POSTRequest] Resp Code:"+con.getResponseCode());
-			System.out.println("[POSTRequest] Resp Message:"+con.getResponseMessage());
-			
-			while ((line = reader.readLine()) != null) {
-				System.out.println("[POSTRequest] Report: "+line);
-			}
-			
-			input.close();
-			
-		} catch (UnsupportedEncodingException e) {
-			System.out.println("[POSTRequest] Encoding error. Maybe string have invalid caracters.");
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			System.out.println("[POSTRequest] Invalid URL. Verify your URL and try again.");
-			e.printStackTrace();
-		} catch (ProtocolException e) {
-			System.out.println("[POSTRequest] Error on HttpPOST request.");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("[POSTRequest] Error on HTTP connection.");
-			e.printStackTrace();
-		}
+		};
+		r.runTaskAsynchronously(Main.getInstance());
 	}
 }
