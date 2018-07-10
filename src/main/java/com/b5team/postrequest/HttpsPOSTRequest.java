@@ -2,98 +2,92 @@ package com.b5team.postrequest;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.KeyManagementException;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class HttpsPOSTRequest {
+class HttpsPOSTRequest {
 	
-	public static void sendRequest(String myurl, String hash, String args[]) throws NoSuchAlgorithmException, KeyManagementException {
+	static void sendRequest(String myurl, String hash, String args[]) {
 		
-		try {
-			SSLContext context = SSLContext.getInstance("TLS");
-			context.init(new KeyManager[0], new TrustManager[] {new DefaultTrustManager()}, new SecureRandom());
-			SSLContext.setDefault(context);
+		BukkitRunnable r = new BukkitRunnable() {
 			
-			URL url = new URL(myurl);
-			HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-			con.setHostnameVerifier(new HostnameVerifier() {
-				@Override
-				public boolean verify(String arg0, SSLSession arg1) {
-					return true;
+			@Override
+			public void run() {
+				
+				try (CloseableHttpClient httpclient = createAcceptSelfSignedCertificateClient()) {
+					
+					HttpPost httppost = new HttpPost(myurl);
+					
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+					params.add(new BasicNameValuePair("hash", hash));
+					
+					for(int i = 0; i < args.length; i++) {
+						
+						params.add(new BasicNameValuePair("arg" + i, args[i]));
+					}
+					
+					httppost.setEntity(new UrlEncodedFormEntity(params));
+					CloseableHttpResponse response = httpclient.execute(httppost);
+					
+					if (response.getStatusLine().getStatusCode() == 200) {
+						
+						DataInputStream input = new DataInputStream(response.getEntity().getContent());
+						BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+						String line;
+						
+						Main.getMainLogger().log(Level.INFO, "Data sent successfully!");
+						
+						while ((line = reader.readLine()) != null) {
+							
+							System.out.println("[POSTRequest] Report: " + line);
+						}
+						
+						response.close();
+					}
+					
+				} catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException | IOException e) {
+					
+					Main.getMainLogger().log(Level.SEVERE, "HTTPS post error.", e);
 				}
-			});
-			
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0;Windows98;DigExt)");
-			con.setDoOutput(true);
-			con.setDoInput(true);
-			
-			DataOutputStream output = new DataOutputStream(con.getOutputStream());
-			output.writeBytes("hash=" + hash);
-			for(int i = 0; i < args.length; i++) {
-				output.writeBytes("&");
-				output.writeBytes("arg" + i + "=" + args[i]);
-				output.flush();
 			}
-			
-			output.flush();
-			output.close();
-			
-			DataInputStream input = new DataInputStream(con.getInputStream());
-			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-			String line;
-			
-			System.out.println("[POSTRequest] Data sent successfully!");
-			System.out.println("[POSTRequest] Resp Code:"+con.getResponseCode());
-			System.out.println("[POSTRequest] Resp Message:"+con.getResponseMessage());
-			
-			while ((line = reader.readLine()) != null) {
-				System.out.println("[POSTRequest] Report: "+line);
-			}
-			
-			input.close();
-			
-		} catch (UnsupportedEncodingException e) {
-			System.out.println("[POSTRequest] Encoding error. Maybe string have invalid caracters.");
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			System.out.println("[POSTRequest] Invalid URL. Verify your URL and try again.");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("[POSTRequest] Error on HTTPS connection.");
-			e.printStackTrace();
-		}
+		};
+		r.runTaskAsynchronously(Main.getInstance());
 	}
 	
-	private static class DefaultTrustManager implements X509TrustManager {
-
-		@Override
-		public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
-				
-		@Override
-		public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+	static CloseableHttpClient createAcceptSelfSignedCertificateClient() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 		
-		@Override
-		public X509Certificate[] getAcceptedIssuers() {
-			return null;
-		}
+		SSLContext sslContext = SSLContextBuilder
+				.create()
+				.loadTrustMaterial(new TrustSelfSignedStrategy())
+				.build();
+		
+		HostnameVerifier allowAllHosts = new NoopHostnameVerifier();
+		SSLConnectionSocketFactory connectionFactory = new SSLConnectionSocketFactory(sslContext, allowAllHosts);
+		
+		return HttpClients
+				.custom()
+				.setSSLSocketFactory(connectionFactory)
+				.build();
 	}
 }
