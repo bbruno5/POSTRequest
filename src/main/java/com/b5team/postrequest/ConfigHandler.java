@@ -11,9 +11,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 
-public class ConfigHandler {
+class ConfigHandler {
 	
-	public Settings loadSettings() throws IOException {
+	Settings loadSettings() throws IOException {
 
 		Settings settings = new Settings();
 		BufferedReader reader = openFile();
@@ -26,7 +26,7 @@ public class ConfigHandler {
 		return settings;
 	}
 	
-	public void generateConfig() {
+	void generateConfig() {
 		
 		File PRDir = Main.getInstance().getDataFolder();
 		
@@ -45,7 +45,7 @@ public class ConfigHandler {
 			}
 			writer = new PrintWriter(new FileWriter(configFile));
 		} catch (IOException ex) {
-			Main.getMainLogger().info("POSTRequest failed to create a new configuration file.");
+			Main.getMainLogger().info("Failed to create a new configuration file.");
 			Main.getMainLogger().log(Level.SEVERE, null, ex);
 		}
 		
@@ -58,7 +58,7 @@ public class ConfigHandler {
 		writer.close();
 	}
 
-	private void parseLine(String line, Settings settings) {
+	void parseLine(String line, Settings settings) {
 		
 		if (line.trim().startsWith("#")) {
 			return;
