@@ -4,9 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Utils {
+class Utils {
 	
-	public String encode(String pwd) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	String encode(String pwd) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
 		MessageDigest algorithm = MessageDigest.getInstance("SHA-512");
 		byte messageDigest[] = algorithm.digest(pwd.getBytes("UTF-8"));
