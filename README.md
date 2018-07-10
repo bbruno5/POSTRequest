@@ -21,6 +21,10 @@ This plugin was made to send POST requests for a external PHP server, sending da
 - Console command;
 - Remote console command (using Rcon connection).
 
+# DOWNLOAD
+The latest compiled version can be found on the following link:
+https://www.spigotmc.org/resources/postrequest.42863/
+
 # INSTALL
 Download and put the file POSTRequest.jar into your plugins folder and then, restart your server.
 
